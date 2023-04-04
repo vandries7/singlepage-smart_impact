@@ -1,0 +1,7 @@
+{
+  "name": "singlepage-smart_impact",
+  "version": "1.0.0",
+  "dependencies": {
+    "jquery": "^3.6.4"
+  }
+}
