@@ -83,9 +83,10 @@ function UserInput() {
                     })
                     .then((response) => {
                         jQuery("body").append(`
-  <pre><code class="language-${
-                            Object.keys(response.data.files)[0].split(".").pop()
-                        }">${response.data.files[Object.keys(response.data.files)[0]].content}</code></pre>
+                            <pre><code class="language-${
+                                Object.keys(response.data.files)[0].split(".").pop()
+                                }">${response.data.files[Object.keys(response.data.files)[0]].content}</code>
+                            </pre>
 `);
                     });
             });
