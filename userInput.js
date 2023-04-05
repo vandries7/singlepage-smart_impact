@@ -1,14 +1,15 @@
 import { Octokit } from "https://cdn.skypack.dev/@octokit/core";
 
 function UserInput() {
-    console.log("UserInput module loaded!");
+
 
     let username = "";
     let user = {};
     let gists = [];
 
     const octokit = new Octokit({
-        auth: "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",
+        //ADD YOUR KEY HERE
+        auth: "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",
     });
 
     const handleSubmit = async (event) => {
@@ -17,31 +18,39 @@ function UserInput() {
         user = await octokit.request("GET /users/{username}", {
             username,
         });
-        gists = await octokit.request("GET /users/{username}/gists", {
-            username,
-        });
+
+        gists = await octokit.request('GET /users/{username}/gists', {
+            username: username ,
+            headers: {
+                'X-GitHub-Api-Version': '2022-11-28'
+            }
+        })
+
+        console.log(gists);
         render();
     };
 
-    const render = () => {
-        jQuery("body").append(`
-      <form>
-        <input type="text" placeholder="Enter Github username" value="${username}" />
-        <button type="submit">Submit</button>
+    jQuery("body").append(`
+      <form class="custom-search">
+        <input type="text" class="custom-search-input" placeholder="Introdu username" value="${username}" />
+        <button type="submit" class="custom-search-botton">Cauta</button>
       </form>
     `);
+
+    const render = () => {
+
         jQuery("form").submit(handleSubmit);
         if (user.data) {
-            jQuery("body").append(`
+            jQuery("#user-input").html(`
         <div>
-          <img alt="" src="${user.data.avatar_url}" />
+          <img alt="${user.data.name}" src="${user.data.avatar_url}" />
           <h2>${user.data.name}</h2>
           <p>${user.data.bio}</p>
         </div>
       `);
         }
-        if (gists.data.length > 0) {
-            jQuery("body").append(`
+        if (gists.status === 200) {
+            jQuery("#user-gists").append(`
         <ul>
           ${gists.data
                 .map(
@@ -53,8 +62,8 @@ function UserInput() {
                         Object.keys(gist.files)[0].split(".").pop()
                     }</span>
               <ul>
-                ${gist.forks.map((fork) => `
-                  <li>${fork.owner.login}</li>
+               ${gist.forks && gist.forks.map((fork) => `
+                    <li>${fork.owner.login}</li>
                 `).join('')}
               </ul>
             </li>
@@ -74,11 +83,10 @@ function UserInput() {
                     })
                     .then((response) => {
                         jQuery("body").append(`
-          <pre><code class="language-${
+  <pre><code class="language-${
                             Object.keys(response.data.files)[0].split(".").pop()
                         }">${response.data.files[Object.keys(response.data.files)[0]].content}</code></pre>
-        `);
-                        Prism.highlightAll();
+`);
                     });
             });
         }
