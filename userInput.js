@@ -9,7 +9,7 @@ function UserInput() {
 
     const octokit = new Octokit({
         //ADD YOUR KEY HERE
-        auth: "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",
+        auth: "API-KEY",
     });
 
     const handleSubmit = async (event) => {
